@@ -6,7 +6,7 @@ Step by Step install
 --------------------
 
 - describe configuration choices 
-- only provide details where you are making config changes instead of sccepting the defaults 
+- only provide details where you are making config changes instead of accepting the defaults 
 
 Sections
 --------
