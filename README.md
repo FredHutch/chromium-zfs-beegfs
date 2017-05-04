@@ -19,7 +19,7 @@ Sections
 * Benchmarks / Discussion
 
 ### Ubuntu ZFS Configuration
-Each BeeGFS storage node is configured on top of ZFS for several reasons including: 
+Each BeeGFS **storage node** is configured with ZFS for several reasons including: 
 * ease of administration
 * well integrated file system and logical volume manager
 * integral compression
@@ -64,6 +64,26 @@ Allocate the pair of 400GB SSDs, `/dev/sda[mn]`, as ZFS intent log, mirrored for
 With the ZFS pool successfully created and populated, create a file system with LZ4 compression enabled:
 
 `zfs create -o compression=lz4 chromium_data/beegfs_data`
+
+### BeeGFS Installation
+All nodes, storage, metadata and management will have BeeGFS installed.  In the described system, metadata and management share the same physical node.
+
+#### All nodes
+Retrieve the current BeeGFS distribution list for Debian (and related distributions like Ubuntu):
+
+`wget http://www.beegfs.com/release/latest-stable/dists/beegfs-deb8.list`
+
+Copy the retrieved distribution list file into each node's package sources directory:
+
+`cp beegfs-deb8.list /etc/apt/sources.list.d/`
+
+Add key (optional but seems wise):
+
+`wget -q http://www.beegfs.com/release/latest-stable/gpg/DEB-GPG-KEY-beegfs -O- | apt-key add -`
+
+Update the configured repositories:
+
+`apt update`
 
 ### Other
 
