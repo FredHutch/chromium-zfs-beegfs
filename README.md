@@ -32,13 +32,13 @@ Each storage node contains:
 * 2 200GB SSDs (/dev/sda[kl] intended for ZFS cache)
 * 2 400GB SSDs (/dev/sda[mn] intended for ZFS intent log)
 
-Ubuntu 16.04.1 LTS provides ZFS in its standard repositories, enabled for use with:
+Install ZFS utilities from Ubuntu 16.04.1 LTS standard repositories:
 
 `apt install zfsutils-linux`
 
 In ZFS, RAIDZ2 is much like RAID6 in that 2 drives in each group can fail without risk to data. It requires more computation than RAIDZ or conventional RAID5, but these storage nodes are well configured with available, fast CPU cores.
 
-Each BeeGFS storage node with 3 RAIDZ2 groups of 11 drives in each ZFS pool, with 1 spare drive.  A list of all available SATA drives was made and each allocated to a RAIDZ2 group:
+Configure each BeeGFS storage node with 3 RAIDZ2 groups, each group with 11 drives:
 ```
 zpool create -f chromium_data raidz2 /dev/sda /dev/sdb /dev/sdc /dev/sdd /dev/sde /dev/sdf /dev/sdg /dev/sdh /dev/sdi /dev/sdj /dev/sdk
 
