@@ -18,7 +18,7 @@ Sections
 * BeeGFS install (supports Kernel 4.8), Kernel tuning, etc. 
 * Benchmarks / Discussion
 
-### Ubuntu ZFS Configuration
+### Ubuntu ZFS Installation and Configuration
 Each BeeGFS **storage node** is configured with ZFS for several reasons including: 
 * ease of administration
 * well integrated file system and logical volume manager
@@ -65,10 +65,10 @@ With the ZFS pool successfully created and populated, create a file system with 
 
 `zfs create -o compression=lz4 chromium_data/beegfs_data`
 
-### BeeGFS Installation
+### BeeGFS Installation and Configuration
 All nodes, storage, metadata and management will have BeeGFS installed.  In the described system, metadata and management share the same physical node.
 
-#### All nodes
+#### All Nodes
 Retrieve the current BeeGFS distribution list for Debian (and related distributions like Ubuntu):
 
 `wget http://www.beegfs.com/release/latest-stable/dists/beegfs-deb8.list`
@@ -85,7 +85,49 @@ Update the configured repositories:
 
 `apt update`
 
-### Other
+#### Storage Node(s)
+Install storage package(s):
+
+`apt install beegfs-storage`
+
+Edit `/etc/beegfs/beegfs-storage.conf`, altering the 2 following lines to match:
+```
+sysMgmtdHost = chromium-meta
+storeStorageDirectory = /chromium_data/beegfs_data
+```
+
+#### Metadata Node(s)
+Install metadata package(s):
+
+`apt install beegfs-meta`
+
+Edit `/etc/beegfs/beegfs-meta`, altering the 2 following lines to match:
+```
+sysMgmtdHost  = chromium-meta
+storeMetaDirectory  = /chromium-metadata
+```
+
+#### Management Node
+Install management package(s):
+
+`apt install beegfs-mgmtd beegfs-utils`
+
+Create storage location for management logging:
+
+`mkdir /var/beegfs`
+
+Edit `/etc/beegfs/beegfs-mgmt`, altering the following line to match:
+```
+storeMgmtdDirectory  = /var/beegfs
+```
+
+**Note:** create `/etc/beegfs/beegfs-client.conf` containing:
+```
+sysMgmtdHost = chromium-meta
+``` 
+This allows the use of `beegfs-ctl` without requiring client installation.
+
+## Other
 
 put default config files that require changes under 
 
