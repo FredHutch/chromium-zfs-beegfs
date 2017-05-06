@@ -29,8 +29,8 @@ Each BeeGFS **storage node** is configured with ZFS for several reasons includin
 Each storage node contains: 
 * 34 2TB SATA drives (/dev/sd[a-z] + /dev/sda[a-g] intended for ZFS data)
 * 2 240GB SSDs (/dev/sda[ij] formatted as mdraid RAID1/ext4 and used for boot/OS)
-* 2 200GB SSDs (/dev/sda[kl] intended for ZFS cache)
-* 2 400GB SSDs (/dev/sda[mn] intended for ZFS intent log)
+* 2 200GB SSDs (/dev/sda[kl] intended for ZFS intent log)
+* 2 400GB SSDs (/dev/sda[mn] intended for ZFS cache)
 
 Install ZFS utilities from Ubuntu 16.04.1 LTS standard repositories:
 
@@ -51,15 +51,15 @@ Allocate the remaining SATA drive, `/dev/sdah`, as a global spare to the ZFS poo
 
 `zpool add -f chromium_data spare /dev/sdah`
 
-Allocate the pair of 200GB SSDs, `/dev/sda[kl]`, as ZFS cache:
+Allocate the pair of 200GB SSDs, `/dev/sda[kl]`, as ZFS intent log, mirrored for integrity:
 
-`zpool add -f chromium_data cache /dev/sdak /dev/sdal`
+`zpool add -f chromium_data log mirror /dev/sdak /dev/sdal`
+
+Allocate the pair of 400GB SSDs, `/dev/sda[mn]`, as ZFS cache:
+
+`zpool add -f chromium_data cache /dev/sdam /dev/sdan`
 
 The cache pair is individually added to maximize space rather than mirrored as cache is checksummed.
-
-Allocate the pair of 400GB SSDs, `/dev/sda[mn]`, as ZFS intent log, mirrored for integrity:
-
-`zpool add -f chromium_data log mirror /dev/sdam /dev/sdan`
 
 With the ZFS pool successfully created and populated, create a file system with LZ4 compression enabled:
 
@@ -101,10 +101,14 @@ Install metadata package(s):
 
 `apt install beegfs-meta`
 
+Create metadata directory:
+
+`mkdir -p /var/beegfs/meta`
+
 Edit `/etc/beegfs/beegfs-meta`, altering the 2 following lines to match:
 ```
 sysMgmtdHost  = chromium-meta
-storeMetaDirectory  = /chromium-metadata
+storeMetaDirectory  = /var/beegfs/meta
 ```
 
 #### Management Node
@@ -114,11 +118,11 @@ Install management package(s):
 
 Create storage location for management logging:
 
-`mkdir /var/beegfs`
+`mkdir -p /var/beegfs/mgmt`
 
 Edit `/etc/beegfs/beegfs-mgmt`, altering the following line to match:
 ```
-storeMgmtdDirectory  = /var/beegfs
+storeMgmtdDirectory  = /var/beegfs/mgmt
 ```
 
 **Note:** create `/etc/beegfs/beegfs-client.conf` containing:
