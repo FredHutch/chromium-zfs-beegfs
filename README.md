@@ -1,5 +1,5 @@
 # chromium-zfs-beegfs
-Full configuration of FredHutch Scratch File System using Commodity Disks, Ubuntu ZFS and BeeGFS
+Full configuration of FredHutch Scratch File System using commodity servers & disks, Ubuntu ZFS and BeeGFS
 
 
 Step by Step install
@@ -130,6 +130,41 @@ storeMgmtdDirectory  = /var/beegfs/mgmt
 sysMgmtdHost = chromium-meta
 ``` 
 This allows the use of `beegfs-ctl` without requiring client installation.
+
+### BeeGFS Startup and Verification
+
+#### Management Node
+```
+/etc/init.d/beegfs-mgmtd start
+```
+
+#### Metadata Node(s)
+```
+/etc/init.d/beegfs-meta start
+```
+
+#### Storage Node(s)
+```
+/etc/init.d/beegfs-storage start
+```
+
+#### Verification
+There are two utilities that can be used to verify that all BeeGFS components are running and visible.  Both should be accessible from the management server.
+
+`beegfs-check-servers` will show all reachable node types and their BeeGFS system IDs.
+
+This program is actually a wrapper for the more general `beegfs-ctl`.
+
+`beegfs-ctl` without parameters will provide a list of its many options.  This tool can be used to:
+* list cluster components
+* delete nodes
+* explicitly migrate data between storage servers
+* display system stats
+* configure redundancy
+* run read/write benchmarks
+* and much, much more
+
+Further information and debugging can be done with the aid of BeeGFS log files on each node.  These have been configured to reside in /var/log/beegfs-[storage,mgmtd,meta] on each server type.
 
 ## Other
 
