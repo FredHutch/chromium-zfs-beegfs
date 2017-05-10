@@ -38,6 +38,8 @@ Install ZFS utilities from Ubuntu 16.04.1 LTS standard repositories:
 
 In ZFS, RAIDZ2 is much like RAID6 in that 2 drives in each group can fail without risk to data. It requires more computation than RAIDZ or conventional RAID5, but these storage nodes are well configured with available, fast CPU cores.
 
+**Note:** the following ZFS commands are available in a unified script `beegfs-zfs-storage.sh` in this repository
+
 Configure each BeeGFS storage node with 3 RAIDZ2 groups, each group with 11 drives:
 ```
 zpool create -f chromium_data raidz2 /dev/sda /dev/sdb /dev/sdc /dev/sdd /dev/sde /dev/sdf /dev/sdg /dev/sdh /dev/sdi /dev/sdj /dev/sdk
