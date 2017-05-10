@@ -4,7 +4,7 @@
 #          Assumes drive configuration == chromium-store[5-8]!
 # ------------------------------------------------------------------
 #
-echo "This script will create a ZFS pool and export a filesystem"
+echo "This script will create a ZFS pool and export a filesystem for BeeGFS"
 read -p "Are you sure? (Y/n)" -n 1 -r
 echo    # (optional) move to a new line
 if [[ ! $REPLY =~ ^Y$ ]]
