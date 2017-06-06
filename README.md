@@ -168,14 +168,3 @@ This program is actually a wrapper for the more general `beegfs-ctl`.
 
 Further information and debugging can be done with the aid of BeeGFS log files on each node.  These have been configured to reside in /var/log/beegfs-[storage,mgmtd,meta] on each server type.
 
-## Other
-
-put default config files that require changes under 
-
-storage/etc
-metadata/etc 
-
-and track changes via github 
-
-We will do chef configurations at a later time. 
-
