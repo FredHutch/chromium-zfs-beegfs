@@ -68,9 +68,10 @@ With the ZFS pool successfully created and populated, create a file system with 
 `zfs create -o compression=lz4 chromium_data/beegfs_data`
 
 ### BeeGFS Installation and Configuration
-All nodes, storage, metadata and management will have BeeGFS installed.  In the described system, metadata and management share the same physical node.
+All nodes - storage, metadata, management (and client) will have BeeGFS installed.  
+In the described system, metadata and management share the same physical node.
 
-#### All Nodes
+#### All Node Types
 Retrieve the current BeeGFS distribution list for Debian (and related distributions like Ubuntu):
 
 `wget http://www.beegfs.com/release/latest-stable/dists/beegfs-deb8.list`
@@ -107,7 +108,7 @@ Create metadata directory:
 
 `mkdir -p /var/beegfs/meta`
 
-Edit `/etc/beegfs/beegfs-meta`, altering the 2 following lines to match:
+Edit `/etc/beegfs/beegfs-meta.conf`, altering the 2 following lines to match:
 ```
 sysMgmtdHost  = chromium-meta
 storeMetaDirectory  = /var/beegfs/meta
@@ -122,16 +123,38 @@ Create storage location for management logging:
 
 `mkdir -p /var/beegfs/mgmt`
 
-Edit `/etc/beegfs/beegfs-mgmt`, altering the following line to match:
+Edit `/etc/beegfs/beegfs-mgmt.conf,`, altering the following line to match:
 ```
 storeMgmtdDirectory  = /var/beegfs/mgmt
 ```
 
-**Note:** create `/etc/beegfs/beegfs-client.conf` containing:
+**Note:** if client not installed, create `/etc/beegfs/beegfs-client.conf` containing:
 ```
 sysMgmtdHost = chromium-meta
 ``` 
-This allows the use of `beegfs-ctl` without requiring client installation.
+This allows the use of `beegfs-ctl` without client installation.
+
+#### Client Node(s)
+Install client package(s):
+
+`apt-get install beegfs-client beegfs-helperd beegfs-utils`
+
+Note: This will pull in many other packages as the client requires a kernel module to be built.
+
+Build client kernel module:
+
+`/etc/init.d/beegfs-client rebuild`
+
+Edit `/etc/beegfs/beegfs-client.conf`, altering the following line to match:
+```
+sysMgmtdHost  = chromium-meta
+```
+
+Edit `/etc/beegfs/beegfs-mounts.conf` to specify where to mount BeeGFS.
+
+The first column is the mount point, e.g. /mnt/beegfs
+
+The second column is the client configuration file for that mount point, e.g. `/etc/beegfs/beegfs-client.conf`
 
 ### BeeGFS Startup and Verification
 
@@ -148,6 +171,12 @@ This allows the use of `beegfs-ctl` without requiring client installation.
 #### Storage Node(s)
 ```
 /etc/init.d/beegfs-storage start
+```
+
+#### Client Node(s)
+```
+/etc/init.d/beegfs-helperd start
+/etc/init.d/beegfs-client start
 ```
 
 #### Verification
