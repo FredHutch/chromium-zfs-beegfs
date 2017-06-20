@@ -1,7 +1,6 @@
 # chromium-zfs-beegfs
 Full configuration of FredHutch Scratch File System using commodity servers & disks, Ubuntu ZFS and BeeGFS
 
-
 Step by Step install
 --------------------
 
@@ -155,6 +154,33 @@ Edit `/etc/beegfs/beegfs-mounts.conf` to specify where to mount BeeGFS.
 The first column is the mount point, e.g. /mnt/beegfs
 
 The second column is the client configuration file for that mount point, e.g. `/etc/beegfs/beegfs-client.conf`
+
+##### Special instructions to install new BeeGFS 6 client on existing FhGFS node for migration
+
+FhGFS and BeeGFS have different client names, configuration directories/files and kernel modules.  With appropriate configuration they can both be installed and function properly on the same node.  This is helpful in easing migration from old to new scratch file systems.
+
+BeeGFS 6 should be installed explicitly from packages via `dpkg` rather than be added to apt.  Though the existing nodes are Ubuntu 14.04.02 LTS (identifying themselves as debian jessie/sid - deb8), BeeGFS **deb7 packages must be installed** instead due to version mismatches.
+
+Get client packages from BeeGFS site or previously installed node and install in order:
+```
+dpkg -i beegfs-opentk-lib_6.11-debian7_amd64.deb 
+dpkg -i beegfs-common_6.11-debian7_amd64.deb
+dpkg -i beegfs-helperd_6.11-debian7_amd64.deb
+dpkg -i beegfs-client_6.11-debian7_all.deb
+```
+Edit config files to avoid conflicts with existing FhGFS client:
+
+Edit `/etc/beegfs/beegfs-client.conf`, altering the following lines to match:
+```
+sysMgmtdHost                  = chromium-meta
+connClientPortUDP             = 8014
+connHelperdPortTCP            = 8016
+```
+
+Edit `/etc/beegfs/beegfs-helperd.conf`, altering the following line to match:
+```
+connHelperdPortTCP = 8016
+```
 
 ### BeeGFS Startup and Verification
 
