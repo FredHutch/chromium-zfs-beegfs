@@ -1,0 +1,5 @@
+# creating multiple PI folders in scratch - with delete policies of 10, 30 and 90 days
+10 07 * * * root /app/scadmin/bin/createPIfolders /fh/scratch/delete90 >> /var/tmp/createPIfolders-90 2>&1
+15 07 * * * root /app/scadmin/bin/createPIfolders /fh/scratch/delete30 >> /var/tmp/createPIfolders-30 2>&1
+20 07 * * * root /app/scadmin/bin/createPIfolders /fh/scratch/delete10 >> /var/tmp/createPIfolders-10 2>&1
+

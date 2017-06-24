@@ -1,0 +1,5 @@
+# warn user and then then delete files which have atime, ctime and mtime >= --days
+10 21 * * * root /app/bin/fs-cleaner --days=90 --warn-days=3 --email-notify=cit-sc\@fhcrc.org --folder=/fh/scratch/delete90 >> /var/tmp/fs-cleaner-90 2>&1
+20 21 * * * root /app/bin/fs-cleaner --days=30 --warn-days=3 --email-notify=cit-sc\@fhcrc.org --folder=/fh/scratch/delete30 >> /var/tmp/fs-cleaner-30 2>&1
+30 21 * * * root /app/bin/fs-cleaner --days=10 --warn-days=3 --email-notify=cit-sc\@fhcrc.org --folder=/fh/scratch/delete10 >> /var/tmp/fs-cleaner-10 2>&1
+
