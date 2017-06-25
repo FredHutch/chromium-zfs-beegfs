@@ -223,3 +223,27 @@ This program is actually a wrapper for the more general `beegfs-ctl`.
 
 Further information and debugging can be done with the aid of BeeGFS log files on each node.  These have been configured to reside in /var/log/beegfs-[storage,mgmtd,meta] on each server type.
 
+
+### File Management 
+
+The scratch file system has 3 folders, delete10, delete30, delete90. Files are deleted when mtime, atime AND ctime are greater than 10, 30 or 90 days from the current date. Each folder contains a work folder per Principal Investigator with the naming convention lastname_f
+
+#### fs-cleaner deletes unused files 
+
+/etc/cron.d/fs-cleaner-scratch has 3 cron jobs that execute fs-cleaner daily for delete10, delete30 and delete90 and removes older files or sends warning emails about files to be deleted. (see https://github.com/FredHutch/fs-cleaner)
+
+
+#### createPIfolders 
+
+/etc/cron.d/new-pi-folders has 3 cron jobs that trigger createPIfolders, an internal shell script that looks for existance of AD security groups and creates folders for each PI that has a security group for accessing the posix file system
+
+ 
+
+
+
+
+
+
+
+
+
