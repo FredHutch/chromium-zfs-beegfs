@@ -25,7 +25,7 @@ Each BeeGFS **storage node** is configured with ZFS for several reasons includin
 * sequentialization of disk writes
 * and very importantly, elaborate error checking and correction
 
-Each storage node contains: 
+Each storage node (Supermicro SC847) contains: 
 * 34 2TB SATA drives (/dev/sd[a-z] + /dev/sda[a-g] intended for ZFS data)
 * 2 240GB SSDs (/dev/sda[ij] formatted as mdraid RAID1/ext4 and used for boot/OS)
 * 2 200GB SSDs (/dev/sda[kl] intended for ZFS intent log)
