@@ -97,6 +97,9 @@ Edit `/etc/beegfs/beegfs-storage.conf`, altering the 2 following lines to match:
 sysMgmtdHost = chromium-meta
 storeStorageDirectory = /chromium_data/beegfs_data
 ```
+Edit `/lib/systemd/system/beegfs-storage.service` uncommenting the line containing the `PIDFile` settings.
+Then reload systemd by running `systemctl daemon-reload`.
+This will enable proper systemd management of the beegfs-storage service.
 
 #### Metadata Node(s)
 Install metadata package(s):
@@ -112,6 +115,9 @@ Edit `/etc/beegfs/beegfs-meta.conf`, altering the 2 following lines to match:
 sysMgmtdHost  = chromium-meta
 storeMetaDirectory  = /var/beegfs/meta
 ```
+Edit `/lib/systemd/system/beegfs-meta.service` uncommenting the line containing the `PIDFile` settings.
+Then reload systemd by running `systemctl daemon-reload`.
+This will enable proper systemd management of the beegfs-meta service.
 
 #### Management Node
 Install management package(s):
@@ -122,10 +128,14 @@ Create storage location for management logging:
 
 `mkdir -p /var/beegfs/mgmt`
 
-Edit `/etc/beegfs/beegfs-mgmt.conf,`, altering the following line to match:
+Edit `/etc/beegfs/beegfs-mgmt.conf,`, altering the following lines to match:
 ```
 storeMgmtdDirectory  = /var/beegfs/mgmt
+logLevel                               = 3
 ```
+Edit `/lib/systemd/system/beegfs-mgmtd.service` uncommenting the line containing the `PIDFile` settings.
+Then reload systemd by running `systemctl daemon-reload`.
+This will enable proper systemd management of the beegfs-mgmtd service.
 
 **Note:** if client not installed, create `/etc/beegfs/beegfs-client.conf` containing:
 ```
