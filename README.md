@@ -88,6 +88,7 @@ Update the configured repositories:
 `apt update`
 
 #### Storage Node(s)
+Hostnames: chromium-store*n*
 Install storage package(s):
 
 `apt install beegfs-storage`
@@ -102,6 +103,7 @@ Then reload systemd by running `systemctl daemon-reload`.
 This will enable proper systemd management of the beegfs-storage service.
 
 #### Metadata Node(s)
+Hostname: chromium-meta
 Install metadata package(s):
 
 `apt install beegfs-meta`
@@ -120,6 +122,7 @@ Then reload systemd by running `systemctl daemon-reload`.
 This will enable proper systemd management of the beegfs-meta service.
 
 #### Management Node
+Hostname: chromium-meta
 Install management package(s):
 
 `apt install beegfs-mgmtd beegfs-utils`
@@ -144,6 +147,7 @@ sysMgmtdHost = chromium-meta
 This allows the use of `beegfs-ctl` without client installation.
 
 #### Client Node(s)
+Hostnames: gizmo*n*, rhino*n*, chromium-meta(different conf)
 Install client package(s):
 
 `apt-get install beegfs-client beegfs-helperd beegfs-utils`
