@@ -12,7 +12,8 @@ Sections
 
 * Prereqs, network install 
 * Hardware, Diskconfiguration Bios
-* OS install, Ubuntu 16.04.2 with Kernel 4.8 & chef bootstrapping with scicomp-base 
+* OS install, Ubuntu 16.04.2 with Kernel 4.8 & chef bootstrapping with scicomp-base
+* Get 4.8+ kernels by running `apt-get install --install-recommends linux-generic-hwe-16.04`
 * Ubuntu ZFS config, RAID choices and decision 
 * BeeGFS install (supports Kernel 4.8), Kernel tuning, etc. 
 * Benchmarks / Discussion
