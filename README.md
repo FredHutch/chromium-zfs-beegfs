@@ -261,11 +261,9 @@ The scratch file system has 3 folders, delete10, delete30, delete90. Files are d
 This documents the manual work done to add the storage servers from the previous fhgfs cluster as new, fresh storage servers to the current BeeGFS chromium cluster.
 
 Steps to create ZFS:
-[] - install 16.04 on chromium-store[1234]
-[] - install zfs with `apt-get install zfsutils-linux`
-[] - import existing zfs pool with `zpool import -f chromium_data`
-[] - destroy the pool with `zpool destroy chromium_data`
-[] - configure RAIDZ as above, but different drive devices (not sure entirely why this happened):
+* install 16.04 on chromium-store[1234]
+* install zfs with `apt-get install zfsutils-linux`
+* configure RAIDZ as above, but different drive devices (not sure entirely why this happened):
 ```
 zpool create -f chromium_data raidz2 /dev/sdc /dev/sdd /dev/sde /dev/sdf /dev/sdg /dev/sdh /dev/sdi /dev/sdj /dev/sdk /dev/sdl /dev/sdm
 
@@ -273,12 +271,12 @@ zpool add -f chromium_data raidz2 /dev/sdn /dev/sdo /dev/sdp /dev/sdq /dev/sdr /
 
 zpool add -f chromium_data raidz2 /dev/sdy /dev/sdz /dev/sdaa /dev/sdab /dev/sdac /dev/sdad /dev/sdae /dev/sdaf /dev/sdag /dev/sdah /dev/sdai
 ```
-[] - add the remaining spinning drive (/dev/sdaj) as a spare with `zpool add -f chromium_data spare /dev/sdaj`
-[] - add ZIL drives with `zpool add -f chromium_data log mirror /dev/sdak /dev/sdal` (same as above)
-[] - add the L2ARC drive with `zpool add -f chromium_data cache /dev/sda`
-[] - create the zfs with `zfs create -o compression=lz4 chromium_data/beegfs_data` (same as above)
+* add the remaining spinning drive (/dev/sdaj) as a spare with `zpool add -f chromium_data spare /dev/sdaj`
+* add ZIL drives with `zpool add -f chromium_data log mirror /dev/sdak /dev/sdal` (same as above)
+* add the L2ARC drive with `zpool add -f chromium_data cache /dev/sda`
+* create the zfs with `zfs create -o compression=lz4 chromium_data/beegfs_data` (same as above)
 
 Steps to install BeeGFS:
 
-
+* install OS packages as above - mixing minor versions within a major release is OK and supported
 
