@@ -257,7 +257,8 @@ The scratch file system has 3 folders, delete10, delete30, delete90. Files are d
 /etc/cron.d/new-pi-folders has 3 cron jobs that trigger createPIfolders, an internal shell script that looks for existance of AD security groups and creates folders for each PI that has a security group for accessing the posix file system
 
  
-#Storage add-on - adding 4 old storage servers to new cluster
+# Storage add-on - adding 4 old storage servers to new cluster
+
 This documents the manual work done to add the storage servers from the previous fhgfs cluster as new, fresh storage servers to the current BeeGFS chromium cluster.
 
 Steps to create ZFS:
