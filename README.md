@@ -43,9 +43,7 @@ In ZFS, RAIDZ2 is much like RAID6 in that 2 drives in each group can fail withou
 Configure each BeeGFS storage node with 3 RAIDZ2 groups, each group with 11 drives:
 ```
 zpool create -f chromium_data raidz2 /dev/sda /dev/sdb /dev/sdc /dev/sdd /dev/sde /dev/sdf /dev/sdg /dev/sdh /dev/sdi /dev/sdj /dev/sdk
-
 zpool add -f chromium_data raidz2 /dev/sdl /dev/sdm /dev/sdn /dev/sdo /dev/sdp /dev/sdq /dev/sdr /dev/sds /dev/sdt /dev/sdu /dev/sdv
-
 zpool add -f chromium_data raidz2 /dev/sdw /dev/sdx /dev/sdy /dev/sdz /dev/sdaa /dev/sdab /dev/sdac /dev/sdad /dev/sdae /dev/sdaf /dev/sdag
 ```
 
@@ -62,6 +60,15 @@ Allocate the pair of 400GB SSDs, `/dev/sda[mn]`, as ZFS cache:
 `zpool add -f chromium_data cache /dev/sdam /dev/sdan`
 
 The cache pair is individually added to maximize space rather than mirrored as cache is checksummed.
+
+**Important note: while drive ids such as /dev/sda are simple to use, they are dynamically assigned and can/will change on reboot if a device is missing via failure.  It is _strongly_ recommended to use invariant names from /dev/disk/by-id/ so that RAID groups and especially spares aren't confused during failure modes.**
+
+#### Sample replacement with invariant name
+```
+ls -l /dev/disk/by-id (to see correspondence)
+zpool remove chromium_data /dev/sdaf (sample spare)
+zpool add chromium_data spare /dev/disk/by_id/wwn-0x5000c50094b863c3
+```
 
 With the ZFS pool successfully created and populated, create a file system with LZ4 compression enabled:
 
@@ -267,15 +274,15 @@ Steps to create ZFS:
 * configure RAIDZ as above, but different drive devices (not sure entirely why this happened):
 ```
 zpool create -f chromium_data raidz2 /dev/sdc /dev/sdd /dev/sde /dev/sdf /dev/sdg /dev/sdh /dev/sdi /dev/sdj /dev/sdk /dev/sdl /dev/sdm
-
 zpool add -f chromium_data raidz2 /dev/sdn /dev/sdo /dev/sdp /dev/sdq /dev/sdr /dev/sds /dev/sdt /dev/sdu /dev/sdv /dev/sdw /dev/sdx
-
 zpool add -f chromium_data raidz2 /dev/sdy /dev/sdz /dev/sdaa /dev/sdab /dev/sdac /dev/sdad /dev/sdae /dev/sdaf /dev/sdag /dev/sdah /dev/sdai
 ```
 * add the remaining spinning drive (/dev/sdaj) as a spare with `zpool add -f chromium_data spare /dev/sdaj`
 * add ZIL drives with `zpool add -f chromium_data log mirror /dev/sdak /dev/sdal` (same as above)
 * add the L2ARC drive with `zpool add -f chromium_data cache /dev/sda`
 * create the zfs with `zfs create -o compression=lz4 chromium_data/beegfs_data` (same as above)
+
+**Please refer to earlier comment re the desirability of using invariant device names especially for spares**
 
 Steps to install BeeGFS:
 
